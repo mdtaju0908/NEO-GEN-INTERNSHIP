@@ -45,13 +45,10 @@ const Resources = () => {
                     {templates.map(template => (
                         <div 
                             key={template.id} 
-                            className="resource-card" 
+                            className="resource-card glass-card" 
                             style={{ 
                                 padding: '30px', 
-                                backgroundColor: 'white', 
                                 borderRadius: '16px', 
-                                border: '1px solid #f3f4f6', 
-                                boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
                                 transition: 'transform 0.3s ease, box-shadow 0.3s ease',
                                 cursor: 'pointer',
                                 display: 'flex',

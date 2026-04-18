@@ -8,9 +8,18 @@ const Reviews = () => {
   useEffect(() => {
     const fetchReviews = async () => {
         try {
-            const data = await ReviewService.getReviews();
-            if (Array.isArray(data) && data.length > 0) {
-              setReviews(data);
+            const response = await fetch('/api/stories?status=approved');
+            const result = await response.json();
+            if (result.success && result.data && result.data.length > 0) {
+              const mappedReviews = result.data.slice(0, 3).map(story => ({
+                id: story._id,
+                name: story.name || story.studentId?.name || 'Anonymous',
+                role: 'Intern',
+                department: story.company || story.college,
+                text: story.experience || story.content || '',
+                image: story.image || `https://ui-avatars.com/api/?name=${encodeURIComponent(story.name || story.studentId?.name || 'A')}&background=random`
+              }));
+              setReviews(mappedReviews);
             } else {
               throw new Error("No reviews found");
             }
@@ -37,13 +46,10 @@ const Reviews = () => {
                 {reviews.map(review => (
                     <div 
                         key={review.id} 
-                        className="review-card" 
+                        className="review-card glass-card" 
                         style={{ 
                             padding: '40px', 
-                            backgroundColor: 'white', 
                             borderRadius: '24px', 
-                            boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
-                            border: '1px solid #f3f4f6',
                             position: 'relative',
                             transition: 'transform 0.3s ease',
                             cursor: 'default'

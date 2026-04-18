@@ -7,10 +7,13 @@ const sendEmail = async (options) => {
       throw new Error('Missing required email fields: email, subject, message');
     }
 
-    if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
+    const emailUser = (process.env.EMAIL_USER || '').trim();
+    const emailPass = (process.env.EMAIL_PASS || '').replace(/\s/g, '');
+
+    if (!emailUser || !emailPass) {
       console.error('[Email] ❌ EMAIL CONFIGURATION MISSING');
-      console.error('[Email] EMAIL_USER:', process.env.EMAIL_USER ? 'SET ✓' : 'NOT SET ✗');
-      console.error('[Email] EMAIL_PASS:', process.env.EMAIL_PASS ? 'SET ✓' : 'NOT SET ✗');
+      console.error('[Email] EMAIL_USER:', emailUser ? 'SET ✓' : 'NOT SET ✗');
+      console.error('[Email] EMAIL_PASS:', emailPass ? 'SET ✓' : 'NOT SET ✗');
       console.error('[Email] ');
       console.error('[Email] 🔧 SETUP INSTRUCTIONS:');
       console.error('[Email] 1. Go to: https://myaccount.google.com/apppasswords');
@@ -24,15 +27,15 @@ const sendEmail = async (options) => {
     console.log(`\n[Email] ═══════════════════════════════════════`);
     console.log(`[Email] 📧 Sending to: ${options.email}`);
     console.log(`[Email] 📝 Subject: ${options.subject}`);
-    console.log(`[Email] 👤 From: ${process.env.EMAIL_USER}`);
+    console.log(`[Email] 👤 From: ${emailUser}`);
     console.log(`[Email] ═══════════════════════════════════════`);
 
     // Create transporter using Gmail service
     const transporter = nodemailer.createTransport({
       service: 'gmail',
       auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS, // Must be Gmail App Password (NOT regular password)
+        user: emailUser,
+        pass: emailPass, // Gmail App Password (spaces stripped if pasted with groups)
       },
     });
 
@@ -56,7 +59,7 @@ const sendEmail = async (options) => {
     `;
 
     const message = {
-      from: `NEO GEN <${process.env.EMAIL_USER}>`,
+      from: `NEO GEN <${emailUser}>`,
       to: options.email,
       subject: options.subject,
       text: options.message,

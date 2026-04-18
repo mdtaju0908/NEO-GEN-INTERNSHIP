@@ -23,7 +23,7 @@ const Contact = () => {
 
   const validatePhone = (phone) => {
     if (!phone) return true; // Phone is optional
-    const phoneRegex = /^[\d\s\-\+\(\)]+$/;
+    const phoneRegex = /^[\d\s\-+()]+$/;
     return phoneRegex.test(phone) && phone.replace(/\D/g, '').length >= 10;
   };
 
@@ -126,7 +126,7 @@ const Contact = () => {
         <div className="contact-content" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '40px' }}>
           <div className="contact-info-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '20px' }}>
             {/* Contact Info Cards */}
-            <div className="contact-info-card" style={{ padding: '30px', backgroundColor: 'white', borderRadius: '16px', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)', textAlign: 'center' }}>
+            <div className="contact-info-card glass-card" style={{ padding: '30px', borderRadius: '16px', textAlign: 'center' }}>
               <div className="contact-icon" style={{ width: '50px', height: '50px', backgroundColor: '#eff6ff', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#2563eb', margin: '0 auto 20px' }}>
                 <Mail size={24} />
               </div>
@@ -138,7 +138,7 @@ const Contact = () => {
               </p>
             </div>
 
-            <div className="contact-info-card" style={{ padding: '30px', backgroundColor: 'white', borderRadius: '16px', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)', textAlign: 'center' }}>
+            <div className="contact-info-card glass-card" style={{ padding: '30px', borderRadius: '16px', textAlign: 'center' }}>
               <div className="contact-icon" style={{ width: '50px', height: '50px', backgroundColor: '#f0fdf4', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#16a34a', margin: '0 auto 20px' }}>
                 <Phone size={24} />
               </div>
@@ -153,7 +153,7 @@ const Contact = () => {
               </p>
             </div>
 
-            <div className="contact-info-card" style={{ padding: '30px', backgroundColor: 'white', borderRadius: '16px', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)', textAlign: 'center' }}>
+            <div className="contact-info-card glass-card" style={{ padding: '30px', borderRadius: '16px', textAlign: 'center' }}>
               <div className="contact-icon" style={{ width: '50px', height: '50px', backgroundColor: '#fff7ed', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#f97316', margin: '0 auto 20px' }}>
                 <MapPin size={24} />
               </div>
@@ -165,7 +165,7 @@ const Contact = () => {
               </p>
             </div>
 
-            <div className="contact-info-card" style={{ padding: '30px', backgroundColor: 'white', borderRadius: '16px', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)', textAlign: 'center' }}>
+            <div className="contact-info-card glass-card" style={{ padding: '30px', borderRadius: '16px', textAlign: 'center' }}>
               <div className="contact-icon" style={{ width: '50px', height: '50px', backgroundColor: '#fef2f2', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#dc2626', margin: '0 auto 20px' }}>
                 <Clock size={24} />
               </div>
@@ -178,7 +178,7 @@ const Contact = () => {
           </div>
 
           {/* Contact Form */}
-          <div className="contact-form-container" style={{ backgroundColor: 'white', padding: '40px', borderRadius: '24px', boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)' }}>
+          <div className="contact-form-container glass-card" style={{ padding: '40px', borderRadius: '24px' }}>
             <h3 className="contact-form-title" style={{ fontSize: '1.5rem', fontWeight: 'bold', marginBottom: '24px', color: '#111827' }}>Send us a Message</h3>
 
             {error && (
@@ -312,7 +312,7 @@ const Contact = () => {
           <h3 className="faq-title" style={{ textAlign: 'center', fontSize: '2rem', fontWeight: 'bold', marginBottom: '40px', color: '#111827' }}>Frequently Asked Questions</h3>
           
           <div className="faq-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '30px' }}>
-            <div className="faq-card" style={{ backgroundColor: 'white', padding: '30px', borderRadius: '16px', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)' }}>
+            <div className="faq-card glass-card" style={{ padding: '30px', borderRadius: '16px' }}>
               <h4 style={{ fontSize: '1.1rem', fontWeight: 'bold', marginBottom: '10px', color: '#111827' }}>How do I apply for an internship?</h4>
               <p style={{ color: '#6b7280', lineHeight: '1.6' }}>
                 Create an account, complete your profile, and browse available internships. 
@@ -320,7 +320,7 @@ const Contact = () => {
               </p>
             </div>
 
-            <div className="faq-card" style={{ backgroundColor: 'white', padding: '30px', borderRadius: '16px', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)' }}>
+            <div className="faq-card glass-card" style={{ padding: '30px', borderRadius: '16px' }}>
               <h4 style={{ fontSize: '1.1rem', fontWeight: 'bold', marginBottom: '10px', color: '#111827' }}>Is there a fee to use NEO GEN?</h4>
               <p style={{ color: '#6b7280', lineHeight: '1.6' }}>
                 No, NEO GEN is completely free for students. We are a government initiative aimed at 
@@ -328,7 +328,7 @@ const Contact = () => {
               </p>
             </div>
 
-            <div className="faq-card" style={{ backgroundColor: 'white', padding: '30px', borderRadius: '16px', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)' }}>
+            <div className="faq-card glass-card" style={{ padding: '30px', borderRadius: '16px' }}>
               <h4 style={{ fontSize: '1.1rem', fontWeight: 'bold', marginBottom: '10px', color: '#111827' }}>What documents do I need?</h4>
               <p style={{ color: '#6b7280', lineHeight: '1.6' }}>
                 You'll need a current resume, valid government ID proof, and educational certificates. 
@@ -336,7 +336,7 @@ const Contact = () => {
               </p>
             </div>
 
-            <div className="faq-card" style={{ backgroundColor: 'white', padding: '30px', borderRadius: '16px', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)' }}>
+            <div className="faq-card glass-card" style={{ padding: '30px', borderRadius: '16px' }}>
               <h4 style={{ fontSize: '1.1rem', fontWeight: 'bold', marginBottom: '10px', color: '#111827' }}>Can I apply to multiple internships?</h4>
               <p style={{ color: '#6b7280', lineHeight: '1.6' }}>
                 Yes! You can apply to as many internships as you want. There's no limit on the number of 
@@ -344,7 +344,7 @@ const Contact = () => {
               </p>
             </div>
 
-            <div className="faq-card" style={{ backgroundColor: 'white', padding: '30px', borderRadius: '16px', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)' }}>
+            <div className="faq-card glass-card" style={{ padding: '30px', borderRadius: '16px' }}>
               <h4 style={{ fontSize: '1.1rem', fontWeight: 'bold', marginBottom: '10px', color: '#111827' }}>How long does the review process take?</h4>
               <p style={{ color: '#6b7280', lineHeight: '1.6' }}>
                 Most applications are reviewed within 5-7 business days. You'll be notified via email 
@@ -352,7 +352,7 @@ const Contact = () => {
               </p>
             </div>
 
-            <div className="faq-card" style={{ backgroundColor: 'white', padding: '30px', borderRadius: '16px', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)' }}>
+            <div className="faq-card glass-card" style={{ padding: '30px', borderRadius: '16px' }}>
               <h4 style={{ fontSize: '1.1rem', fontWeight: 'bold', marginBottom: '10px', color: '#111827' }}>How do I track my applications?</h4>
               <p style={{ color: '#6b7280', lineHeight: '1.6' }}>
                 Go to your Dashboard to view all your submitted applications, their current status, 

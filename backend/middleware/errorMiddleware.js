@@ -1,5 +1,9 @@
 const errorHandler = (err, req, res, next) => {
-  const statusCode = res.statusCode ? res.statusCode : 500;
+  // Default Express response is 200; thrown errors must not stay 200 or clients see misleading status/bodies.
+  let statusCode = err.statusCode || res.statusCode;
+  if (!statusCode || statusCode === 200) {
+    statusCode = 500;
+  }
 
   res.status(statusCode);
 

@@ -1,42 +1,55 @@
 const multer = require('multer');
-const { CloudinaryStorage } = require('multer-storage-cloudinary');
-const cloudinary = require('../config/cloudinary');
 const path = require('path');
+const fs = require('fs');
 
-// Set up Cloudinary storage
-const storage = new CloudinaryStorage({
-    cloudinary: cloudinary,
-    params: {
-        folder: 'neo-gen/uploads',
-        resource_type: 'auto', // Allow pdf, doc, etc.
-        allowed_formats: ['jpg', 'png', 'jpeg', 'pdf', 'doc', 'docx'],
-        // transformation: [{ width: 500, height: 500, crop: 'limit' }] // Optional
-    },
-});
+// Use local disk storage so that atsController can:
+//   1. Read the file buffer for text extraction (pdf-parse / mammoth)
+//   2. Upload the file to Cloudinary manually
+//   3. Delete the temp file afterwards
+// Using CloudinaryStorage would upload the file before the controller runs,
+// leaving req.file.path as a remote URL which cannot be read by fs.readFileSync.
 
-// Check file type (still good to keep for validation, though Cloudinary handles some)
-function checkFileType(file, cb) {
-    // Allowed ext
-    const filetypes = /jpeg|jpg|png|gif|pdf|doc|docx/;
-    // Check ext
-    const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
-    // Check mime
-    const mimetype = filetypes.test(file.mimetype);
-
-    if (mimetype && extname) {
-        return cb(null, true);
-    } else {
-        cb('Error: Images and Documents Only!');
-    }
+const uploadDir = path.join(__dirname, '../uploads');
+if (!fs.existsSync(uploadDir)) {
+    fs.mkdirSync(uploadDir, { recursive: true });
 }
 
-// Init upload
-const upload = multer({
-    storage: storage,
-    limits: { fileSize: 5000000 }, // 5MB limit
-    fileFilter: function (req, file, cb) {
-        checkFileType(file, cb);
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, uploadDir);
+    },
+    filename: (req, file, cb) => {
+        // Sanitise original name and add timestamp to avoid collisions
+        const safeName = file.originalname.replace(/[^a-zA-Z0-9._-]/g, '_');
+        cb(null, `${Date.now()}-${safeName}`);
     }
+});
+
+const fileFilter = (req, file, cb) => {
+    const allowed = [
+        'application/pdf',
+        'application/msword',
+        'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+        'image/jpeg',
+        'image/jpg',
+        'image/png',
+        'image/gif',
+        'image/webp'
+    ];
+    const ext = path.extname(file.originalname).toLowerCase();
+    const allowedExts = ['.pdf', '.doc', '.docx', '.jpg', '.jpeg', '.png', '.gif', '.webp'];
+
+    if (allowed.includes(file.mimetype) || allowedExts.includes(ext)) {
+        cb(null, true);
+    } else {
+        cb(new Error('Invalid file type. Only PDF, DOC, DOCX, and images are allowed.'), false);
+    }
+};
+
+const upload = multer({
+    storage,
+    limits: { fileSize: 10 * 1024 * 1024 }, // 10 MB
+    fileFilter
 });
 
 module.exports = upload;

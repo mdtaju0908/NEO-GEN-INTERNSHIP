@@ -6,7 +6,7 @@ import { motion } from 'framer-motion';
 const InternshipCard = ({ job, loading, index }) => {
   if (loading) {
     return (
-      <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+      <div className="glass-card p-6">
         <div className="flex justify-between items-start mb-4">
           <div className="flex gap-4 w-full">
             <Skeleton className="w-12 h-12 rounded-lg flex-shrink-0" />
@@ -21,7 +21,7 @@ const InternshipCard = ({ job, loading, index }) => {
           <Skeleton className="h-6 w-24" />
           <Skeleton className="h-6 w-16" />
         </div>
-        <div className="flex items-center justify-between pt-4 border-t border-gray-100">
+        <div className="flex items-center justify-between pt-4 border-t border-navy/5">
           <Skeleton className="h-4 w-24" />
           <Skeleton className="h-9 w-28 rounded-lg" />
         </div>
@@ -35,48 +35,48 @@ const InternshipCard = ({ job, loading, index }) => {
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: index * 0.1 }}
       whileHover={{ y: -5, transition: { duration: 0.2 } }}
-      className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 hover:shadow-lg transition-all duration-300 relative overflow-hidden group"
+      className="glass-card p-6 group cursor-default"
     >
       <div className="flex justify-between items-start mb-4">
         <div className="flex gap-4">
-          <div className="w-12 h-12 bg-gray-50 rounded-xl flex items-center justify-center text-2xl border border-gray-100 shadow-sm group-hover:scale-110 transition-transform">
+          <div className="w-12 h-12 bg-gradient-to-br from-saffron/10 to-green-primary/10 rounded-xl flex items-center justify-center text-2xl border border-navy/5 shadow-sm group-hover:scale-110 transition-transform">
             {job.logo || '🏢'}
           </div>
           <div>
-            <h3 className="font-bold text-gray-900 line-clamp-1">{job.title}</h3>
-            <p className="text-gray-500 text-sm line-clamp-1">{job.company}</p>
+            <h3 className="font-bold text-navy line-clamp-1">{job.title}</h3>
+            <p className="text-sub text-sm line-clamp-1">{job.company}</p>
           </div>
         </div>
         {job.matchScore && (
-          <span className="bg-emerald-50 text-emerald-700 text-xs font-bold px-2.5 py-1 rounded-full flex items-center border border-emerald-100">
+          <span className="bg-green-light text-green-hover text-xs font-bold px-2.5 py-1 rounded-full flex items-center border border-green-primary/20 shadow-sm">
             <Star size={12} className="mr-1 fill-current" />
             {job.matchScore}% Match
           </span>
         )}
       </div>
   
-      <div className="flex flex-wrap gap-2 mb-6 text-sm text-gray-500">
-        <span className="flex items-center bg-gray-50 px-2.5 py-1 rounded-lg border border-gray-100">
-          <MapPin size={14} className="mr-1.5 text-gray-400" /> {job.location}
+      <div className="flex flex-wrap gap-2 mb-6 text-sm text-navy/70">
+        <span className="flex items-center bg-white/50 px-2.5 py-1 rounded-lg border border-navy/5 shadow-sm">
+          <MapPin size={14} className="mr-1.5 text-saffron" /> {job.location}
         </span>
-        <span className="flex items-center bg-gray-50 px-2.5 py-1 rounded-lg border border-gray-100">
-          <Clock size={14} className="mr-1.5 text-gray-400" /> {job.duration}
+        <span className="flex items-center bg-white/50 px-2.5 py-1 rounded-lg border border-navy/5 shadow-sm">
+          <Clock size={14} className="mr-1.5 text-saffron" /> {job.duration}
         </span>
-        <span className="flex items-center bg-gray-50 px-2.5 py-1 rounded-lg border border-gray-100">
-          <DollarSign size={14} className="mr-1.5 text-gray-400" /> {job.stipend}
+        <span className="flex items-center bg-white/50 px-2.5 py-1 rounded-lg border border-navy/5 shadow-sm">
+          <DollarSign size={14} className="mr-1.5 text-saffron" /> {job.stipend}
         </span>
-        <span className="flex items-center bg-gray-50 px-2.5 py-1 rounded-lg border border-gray-100">
-          <Briefcase size={14} className="mr-1.5 text-gray-400" /> {job.type}
+        <span className="flex items-center bg-white/50 px-2.5 py-1 rounded-lg border border-navy/5 shadow-sm">
+          <Briefcase size={14} className="mr-1.5 text-saffron" /> {job.type}
         </span>
       </div>
   
-      <div className="flex items-center justify-between pt-4 border-t border-gray-100">
-        <span className="text-xs text-gray-400 font-medium">Posted {job.postedAt}</span>
+      <div className="flex items-center justify-between pt-4 border-t border-navy/5">
+        <span className="text-xs text-sub font-medium">Posted {job.postedAt}</span>
         <motion.button 
           whileTap={{ scale: 0.95 }}
-          className="flex items-center text-sm font-medium text-white bg-gray-900 hover:bg-black px-4 py-2 rounded-xl transition-colors shadow-sm group-hover:shadow-md"
+          className="btn-primary py-1.5 px-4 text-sm"
         >
-          Apply Now <ArrowRight size={16} className="ml-2 group-hover:translate-x-1 transition-transform" />
+          Apply Now <ArrowRight size={16} className="ml-2 inline group-hover:translate-x-1 transition-transform" />
         </motion.button>
       </div>
     </motion.div>
@@ -103,13 +103,13 @@ const Recommendations = () => {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-            <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
-              <Sparkles className="text-amber-500 fill-amber-500" />
+            <h1 className="text-2xl font-bold text-navy flex items-center gap-2">
+              <Sparkles className="text-saffron fill-saffron" />
               Recommended for You
             </h1>
-            <p className="text-gray-500 mt-1">AI-curated internships based on your profile and skills.</p>
+            <p className="text-sub mt-1">AI-curated internships based on your profile and skills.</p>
         </div>
-        <select className="border border-gray-200 rounded-xl text-sm px-4 py-2.5 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm cursor-pointer hover:bg-gray-50 transition-colors">
+        <select className="border border-navy/10 rounded-xl text-sm px-4 py-2.5 bg-white/50 focus:outline-none focus:ring-2 focus:ring-saffron/30 focus:border-saffron shadow-sm cursor-pointer hover:bg-white transition-colors text-navy font-medium">
             <option>Sort by Match Score</option>
             <option>Newest First</option>
             <option>Highest Stipend</option>
@@ -132,18 +132,18 @@ const Recommendations = () => {
         <motion.div 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="text-center py-16 bg-white rounded-2xl border border-gray-100 shadow-sm"
+            className="text-center py-16 bg-gradient-to-br from-saffron/5 to-white/40 rounded-2xl border border-saffron/10 shadow-sm"
         >
-             <div className="w-20 h-20 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-6">
-                 <Briefcase size={40} className="text-gray-300" />
+             <div className="w-20 h-20 bg-gradient-to-br from-saffron/10 to-transparent rounded-full flex items-center justify-center mx-auto mb-6 shadow-inner">
+                 <Briefcase size={40} className="text-saffron/50" />
              </div>
-             <h3 className="text-xl font-bold text-gray-900">No recommendations yet</h3>
-             <p className="text-gray-500 mt-2 mb-8 max-w-md mx-auto">
+             <h3 className="text-xl font-bold text-navy">No recommendations yet</h3>
+             <p className="text-sub mt-2 mb-8 max-w-md mx-auto">
                 We need more information about your skills and preferences to find the best matches.
              </p>
              <button 
                 onClick={() => onNavigate && onNavigate('profile')}
-                className="px-6 py-3 bg-blue-600 text-white rounded-xl font-medium hover:bg-blue-700 transition-colors shadow-md hover:shadow-lg transform hover:-translate-y-0.5"
+                className="btn-primary"
              >
                  Update Profile
              </button>

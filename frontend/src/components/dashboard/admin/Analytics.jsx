@@ -42,8 +42,8 @@ const Analytics = () => {
     const fetchStats = async () => {
       try {
         setLoading(true);
-        const data = await api.get('/dashboard/admin-summary');
-        setStats(data);
+        const data = await api.get('/admin/analytics');
+        setStats(data.data);
       } catch (error) {
         console.error('Error fetching analytics:', error);
       } finally {
@@ -106,16 +106,16 @@ const Analytics = () => {
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <Card className="p-6">
-            <h4 className="text-sm font-medium text-gray-500">Total Students</h4>
-            <p className="text-2xl font-bold text-gray-900 mt-2">{stats?.totalStudents || 0}</p>
-        </Card>
-        <Card className="p-6">
-            <h4 className="text-sm font-medium text-gray-500">Total Partners</h4>
-            <p className="text-2xl font-bold text-gray-900 mt-2">{stats?.totalPartners || 0}</p>
+            <h4 className="text-sm font-medium text-gray-500">Total Users</h4>
+            <p className="text-2xl font-bold text-gray-900 mt-2">{stats?.totalUsers || 0}</p>
         </Card>
         <Card className="p-6">
             <h4 className="text-sm font-medium text-gray-500">Total Internships</h4>
             <p className="text-2xl font-bold text-gray-900 mt-2">{stats?.totalInternships || 0}</p>
+        </Card>
+        <Card className="p-6">
+            <h4 className="text-sm font-medium text-gray-500">Total Applications</h4>
+            <p className="text-2xl font-bold text-gray-900 mt-2">{stats?.totalApplications || 0}</p>
         </Card>
       </div>
     </div>

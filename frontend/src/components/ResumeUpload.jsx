@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { Upload, File, AlertCircle, CheckCircle, Loader } from 'lucide-react';
+import toast from 'react-hot-toast';
 import { saveResumeToStorage } from '../utils/storageUtils';
+import resumeService from '../services/resumeService';
 import '../styles/resumeUpload.css';
 
 const ResumeUpload = ({ onUploadSuccess, isLoading = false, currentResume = null }) => {
@@ -68,6 +70,7 @@ const ResumeUpload = ({ onUploadSuccess, isLoading = false, currentResume = null
         const validationError = validateFile(file);
         if (validationError) {
             setError(validationError);
+            toast.error(validationError);
             return;
         }
 
@@ -77,52 +80,24 @@ const ResumeUpload = ({ onUploadSuccess, isLoading = false, currentResume = null
 
     const uploadResume = async (file) => {
         try {
-            // Mock ATS Analysis Data
-            const mockData = {
-                resumeUploaded: true,
-                resumeId: 'mock-resume-id-' + Date.now(),
-                score: 72,
-                breakdown: {
-                    technical: 75,
-                    softSkills: 68,
-                    experience: 60,
-                    education: 80,
-                    completeness: 85,
-                    formatting: 90,
-                    contact: 100
-                },
-                suggestions: [
-                    "Add more quantitative results to your experience section",
-                    "Include keywords from the job description",
-                    "Highlight leadership roles in your projects"
-                ],
-                matchedKeywords: ["JavaScript", "React", "Node.js", "Teamwork", "Problem Solving"],
-                missingKeywords: ["Python", "AWS", "Docker"],
-                sections: {
-                    hasSummary: true,
-                    hasExperience: true,
-                    hasEducation: true,
-                    hasSkills: true,
-                    hasProjects: true,
-                    hasContact: true
-                },
-                extractedSkills: ["JavaScript", "React", "Node.js", "HTML", "CSS", "Git", "Agile"]
-            };
+            setUploadProgress(25);
 
-            // Simulate network delay slightly for better UX (optional, but "instantly" was requested)
-            // User said "Demo data should render instantly without API delay", so no delay.
-
-            setSuccess('Resume uploaded and analyzed successfully!');
+            // Call the real backend API service
+            const responseData = await resumeService.uploadResume(file);
+            
             setUploadProgress(100);
+            setSuccess(responseData.message || 'Resume uploaded and analyzed successfully!');
+            toast.success(responseData.message || 'Resume uploaded successfully!');
 
-            // Save resume data to localStorage
+            // Save resume data to localStorage matching the backend response
             const resumeStorage = {
-                ...mockData,
+                ...responseData,
                 uploadedAt: new Date().toISOString(),
                 fileName: file.name,
                 fileSize: file.size,
-                isMock: true
+                isMock: false
             };
+            
             saveResumeToStorage(resumeStorage, file.name);
 
             // Call parent callback with safe data
@@ -135,7 +110,9 @@ const ResumeUpload = ({ onUploadSuccess, isLoading = false, currentResume = null
 
         } catch (err) {
             console.error('Upload error:', err);
-            setError(err.message || 'Failed to upload resume. Please try again.');
+            const errorMessage = err.message || 'Failed to upload resume. Please try again.';
+            setError(errorMessage);
+            toast.error(errorMessage);
             setUploadProgress(0);
         }
     };

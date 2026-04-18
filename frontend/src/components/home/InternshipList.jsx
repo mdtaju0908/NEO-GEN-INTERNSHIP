@@ -501,25 +501,11 @@ const InternshipList = () => {
             filteredInternships.map(internship => (
               <div 
                 key={internship._id || internship.id} 
-                className="internship-card"
+                className="internship-card glass-card"
                 style={{
-                  backgroundColor: '#fff',
-                  borderRadius: '16px',
-                  border: '1px solid #f3f4f6',
-                  boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
                   display: 'flex',
                   flexDirection: 'column',
-                  overflow: 'hidden',
-                  transition: 'all 0.3s ease',
                   cursor: 'pointer'
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.transform = 'translateY(-5px)';
-                  e.currentTarget.style.boxShadow = '0 10px 15px -3px rgba(0, 0, 0, 0.1)';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.transform = 'translateY(0)';
-                  e.currentTarget.style.boxShadow = '0 4px 6px -1px rgba(0, 0, 0, 0.1)';
                 }}
               >
                 <div style={{ padding: '24px' }}>

@@ -58,7 +58,7 @@ const About = () => {
             {features.map((feature, index) => (
               <div 
                 key={index}
-                className="p-8 bg-gray-50 rounded-2xl hover:shadow-xl transition-all duration-300 border border-gray-100 group"
+                className="p-8 glass-card rounded-2xl hover:shadow-xl transition-all duration-300 group"
               >
                 <div className="mb-4 transform group-hover:scale-110 transition-transform duration-300">
                   {feature.icon}

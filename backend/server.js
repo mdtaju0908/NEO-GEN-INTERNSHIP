@@ -1,17 +1,66 @@
 const express = require('express');
-const dotenv = require('dotenv').config();
-const colors = require('colors');
+const http = require('http');
+const { Server } = require('socket.io');
+const path = require('path');
+require('dotenv').config({ path: path.join(__dirname, '.env') });
+require('colors');
+
+process.on('uncaughtException', (err) => {
+	console.error('UNCAUGHT EXCEPTION! 💥 Shutting down...'.red.bold);
+	console.error(err.name, err.message, err.stack);
+	process.exit(1);
+});
+
+process.on('unhandledRejection', (err) => {
+	console.error('UNHANDLED REJECTION! 💥'.red.bold);
+	console.error(err.name, err.message, err.stack);
+	// Optionally graceful shutdown here
+});
+
+// Login and JWT routes need JWT_SECRET. Missing value makes jsonwebtoken throw → HTTP 500 on /api/auth/login.
+if (!process.env.JWT_SECRET) {
+	if (process.env.NODE_ENV === 'production') {
+		console.error('FATAL: JWT_SECRET must be set in production');
+		process.exit(1);
+	}
+	process.env.JWT_SECRET = 'dev-only-insecure-jwt-secret-change-in-env';
+	console.warn('[config] JWT_SECRET not set; using a development default. Add JWT_SECRET to backend/.env for production.');
+}
+
 const cors = require('cors');
 const connectDB = require('./config/db');
 const { errorHandler } = require('./middleware/errorMiddleware');
 const ensureAdminExists = require('./utils/ensureAdmin');
 
-// Bootstrap: connect DB, then ensure admin, then init app
 const app = express();
-(async () => {
-	await connectDB();
-	await ensureAdminExists();
-})();
+const server = http.createServer(app);
+const io = new Server(server, {
+  cors: {
+    origin: '*',
+    methods: ['GET', 'POST']
+  }
+});
+
+// Socket.io logic
+io.on('connection', (socket) => {
+  console.log(`Socket Connected: ${socket.id}`);
+  
+  socket.on('joinRoom', (roomId) => {
+    socket.join(roomId);
+    console.log(`User joined room: ${roomId}`);
+  });
+
+  socket.on('sendMessage', (data) => {
+    io.to(data.roomId).emit('newMessage', data);
+  });
+
+  socket.on('disconnect', () => {
+    console.log(`Socket Disconnected: ${socket.id}`);
+  });
+});
+
+// Set io globally so it can be accessed in controllers if needed
+app.set('io', io);
 
 // Middleware
 app.use(express.json());
@@ -32,6 +81,7 @@ app.use('/api/profile', require('./routes/profileRoutes'));
 app.use('/api/dashboard', require('./routes/dashboardRoutes'));
 app.use('/api/resume', require('./routes/atsRoutes'));
 app.use('/api/upload', require('./routes/uploadRoutes'));
+app.use('/api/stories', require('./routes/successStoryRoutes'));
 
 // Local uploads are no longer used; files are stored in Cloudinary
 
@@ -40,4 +90,14 @@ app.use(errorHandler);
 
 const PORT = process.env.PORT || 5000;
 
-app.listen(PORT, () => console.log(`Server started on port ${PORT}`));
+(async () => {
+	try {
+        console.log('[Bootstrap] Initializing database connection...'.yellow);
+		await connectDB();
+		await ensureAdminExists();
+		server.listen(PORT, () => console.log(`Server started on port ${PORT}`.green.bold));
+	} catch (err) {
+		console.error(`[Bootstrap Error] Server failed to start: ${err.message}`.red);
+		process.exit(1);
+	}
+})();

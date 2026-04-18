@@ -1,12 +1,12 @@
 const express = require('express');
 const router = express.Router();
 const upload = require('../middleware/uploadMiddleware');
-const { protect } = require('../middleware/authMiddleware');
+const { protect, optionalAuth } = require('../middleware/authMiddleware');
 
 // @desc    Upload file
 // @route   POST /api/upload
-// @access  Private
-router.post('/', protect, upload.single('file'), (req, res) => {
+// @access  Public/Private
+router.post('/', upload.single('file'), (req, res) => {
     try {
         if (!req.file) {
             res.status(400);

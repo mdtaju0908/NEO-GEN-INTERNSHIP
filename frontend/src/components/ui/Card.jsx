@@ -18,16 +18,16 @@ const Card = ({
       transition={{ duration: 0.3 }}
       onClick={onClick}
       className={clsx(
-        "bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden",
-        onClick && "cursor-pointer hover:shadow-md transition-shadow duration-200",
+        "glass-card overflow-hidden relative",
+        onClick && "cursor-pointer hover:shadow-lg transition-all duration-300",
         className
       )}
     >
       {(title || action) && (
-        <div className="px-6 py-4 border-b border-gray-50 flex justify-between items-center">
+        <div className="px-6 py-4 border-b border-white/20 flex justify-between items-center">
           <div>
-            {title && <h3 className="text-lg font-semibold text-gray-900">{title}</h3>}
-            {subtitle && <p className="text-sm text-gray-500 mt-1">{subtitle}</p>}
+            {title && <h3 className="heading-navy text-xl">{title}</h3>}
+            {subtitle && <p className="text-sub text-sm mt-1">{subtitle}</p>}
           </div>
           {action && <div>{action}</div>}
         </div>

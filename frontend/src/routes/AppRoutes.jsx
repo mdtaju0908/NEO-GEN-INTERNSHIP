@@ -6,6 +6,7 @@ import Home from '../pages/Home';
 import Login from '../pages/auth/Login';
 import FindInternship from '../pages/FindInternship';
 import ResumeTemplates from '../pages/ResumeTemplates';
+import SuccessStoriesPublic from '../pages/SuccessStoriesPublic';
 
 // Dashboard Wrappers
 import StudentDashboard from '../pages/dashboard/StudentDashboard';
@@ -20,17 +21,21 @@ import StudentApplications from '../components/dashboard/student/Applications';
 import StudentRecommendations from '../components/dashboard/student/Recommendations';
 import StudentAnalytics from '../components/dashboard/student/Analytics';
 import StudentSettings from '../components/dashboard/student/Settings';
+import SuccessStories from '../components/dashboard/student/SuccessStories';
 
 // Admin Components
 import AdminOverview from '../components/dashboard/admin/Overview';
+import AdminProfile from '../components/dashboard/admin/Profile';
 import AdminUsers from '../components/dashboard/admin/Users';
 import AdminInternships from '../components/dashboard/admin/Internships';
 import AdminApplications from '../components/dashboard/admin/Applications';
 import AdminAnalytics from '../components/dashboard/admin/Analytics';
 import AdminSettings from '../components/dashboard/admin/Settings';
+import AdminSuccessStories from '../components/dashboard/admin/SuccessStories';
 
 // Partner Components
 import PartnerOverview from '../components/dashboard/partner/Overview';
+import PartnerProfile from '../components/dashboard/partner/Profile';
 import PartnerPostInternship from '../components/dashboard/partner/PostInternship';
 import PartnerApplications from '../components/dashboard/partner/Applications';
 import PartnerAnalytics from '../components/dashboard/partner/Analytics';
@@ -44,6 +49,7 @@ const AppRoutes = () => {
       <Route path="/login" element={<Login />} />
       <Route path="/find-internship" element={<FindInternship />} />
       <Route path="/resources/resume-templates" element={<ResumeTemplates />} />
+      <Route path="/success-stories" element={<SuccessStoriesPublic />} />
 
       {/* Student Routes */}
       <Route path="/dashboard" element={<StudentDashboard />}>
@@ -54,14 +60,17 @@ const AppRoutes = () => {
         <Route path="recommendations" element={<StudentRecommendations />} />
         <Route path="analytics" element={<StudentAnalytics />} />
         <Route path="settings" element={<StudentSettings />} />
+        <Route path="success-stories" element={<SuccessStories />} />
       </Route>
 
       {/* Admin Routes */}
       <Route path="/admin/dashboard" element={<AdminDashboard />}>
         <Route index element={<AdminOverview />} />
+        <Route path="profile" element={<AdminProfile />} />
         <Route path="users" element={<AdminUsers />} />
         <Route path="internships" element={<AdminInternships />} />
         <Route path="applications" element={<AdminApplications />} />
+        <Route path="success-stories" element={<AdminSuccessStories />} />
         <Route path="analytics" element={<AdminAnalytics />} />
         <Route path="settings" element={<AdminSettings />} />
       </Route>
@@ -69,6 +78,7 @@ const AppRoutes = () => {
       {/* Partner Routes */}
       <Route path="/partner/dashboard" element={<PartnerDashboard />}>
         <Route index element={<PartnerOverview />} />
+        <Route path="profile" element={<PartnerProfile />} />
         <Route path="post-internship" element={<PartnerPostInternship />} />
         <Route path="applications" element={<PartnerApplications />} />
         <Route path="analytics" element={<PartnerAnalytics />} />

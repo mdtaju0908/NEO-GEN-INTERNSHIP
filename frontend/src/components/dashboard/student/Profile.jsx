@@ -54,11 +54,11 @@ const Profile = () => {
           <Skeleton className="h-8 w-48 mb-2" />
           <Skeleton className="h-4 w-96" />
         </div>
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+        <div className="glass-card overflow-hidden">
            <Skeleton className="h-32 w-full" />
            <div className="px-8 pb-8">
              <div className="relative flex items-end -mt-12 mb-8">
-               <Skeleton className="w-32 h-32 rounded-full border-4 border-white" />
+               <Skeleton className="w-32 h-32 rounded-full border-4 border-white/80 glass-card p-1" />
                <div className="ml-6 mb-2 space-y-2">
                  <Skeleton className="h-8 w-48" />
                  <Skeleton className="h-4 w-32" />
@@ -175,11 +175,11 @@ const Profile = () => {
 
       <motion.div 
         variants={itemVariants}
-        className="bg-white/80 backdrop-blur-xl rounded-2xl shadow-lg border border-white/20 overflow-hidden"
+        className="glass-card shadow-lg p-0 overflow-hidden"
       >
         {/* Profile Header / Cover */}
-        <div className="h-32 bg-gradient-to-r from-blue-600 to-indigo-600 relative overflow-hidden">
-          <div className="absolute inset-0 bg-white/10 pattern-grid-lg opacity-20"></div>
+        <div className="h-32 bg-gradient-to-r from-saffron/80 via-white/40 to-green-primary/80 relative overflow-hidden">
+          <div className="absolute inset-0 bg-white/20 pattern-grid-lg opacity-40"></div>
         </div>
 
         <div className="px-8 pb-8">
@@ -187,7 +187,7 @@ const Profile = () => {
             <div className="relative group">
               <motion.div 
                 whileHover={{ scale: 1.05 }}
-                className="w-32 h-32 rounded-full border-4 border-white bg-white shadow-xl overflow-hidden relative"
+                className="w-32 h-32 rounded-full border-4 border-white/80 glass-card p-1 shadow-2xl overflow-hidden relative"
               >
                 <img 
                   src={profileData?.profilePicture || `https://ui-avatars.com/api/?name=${formData.name || 'User'}&background=random`} 
@@ -204,7 +204,7 @@ const Profile = () => {
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.9 }}
                 onClick={() => fileInputRef.current.click()}
-                className="absolute bottom-0 right-0 p-2.5 bg-blue-600 rounded-full shadow-lg border-2 border-white text-white hover:bg-blue-700 transition-colors"
+                className="absolute bottom-0 right-0 p-2.5 bg-saffron rounded-full shadow-lg border-2 border-white text-white hover:bg-saffron-hover transition-colors"
               >
                 <Camera size={18} />
               </motion.button>
@@ -224,9 +224,9 @@ const Profile = () => {
               </p>
             </div>
              <div className="hidden sm:block">
-                <div className="bg-blue-50 px-4 py-2 rounded-xl text-center border border-blue-100">
-                    <span className="block text-xs font-bold text-blue-600 uppercase tracking-wider">Completion</span>
-                    <span className="block text-xl font-extrabold text-blue-700">{profileData?.profileCompletionPercentage || 0}%</span>
+                <div className="bg-green-light px-4 py-2 rounded-xl text-center border border-green-primary/20">
+                    <span className="block text-xs font-bold text-green-primary uppercase tracking-wider">Completion</span>
+                    <span className="block text-xl font-extrabold text-green-hover">{profileData?.profileCompletionPercentage || 0}%</span>
                 </div>
             </div>
           </div>
@@ -320,7 +320,7 @@ const Profile = () => {
                       initial={{ opacity: 0, scale: 0.8 }}
                       animate={{ opacity: 1, scale: 1 }}
                       exit={{ opacity: 0, scale: 0.8 }}
-                      className="bg-white text-blue-700 px-3 py-1.5 rounded-lg text-sm font-medium shadow-sm border border-blue-100 flex items-center gap-2"
+                      className="bg-gradient-to-r from-saffron-light to-white text-navy px-4 py-2 rounded-xl text-sm font-bold shadow-sm border border-saffron/20 flex items-center gap-2"
                     >
                       {skill}
                       <button 
@@ -354,7 +354,7 @@ const Profile = () => {
                 whileTap={{ scale: 0.98 }}
                 type="submit"
                 disabled={loading}
-                className="flex items-center px-8 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl font-medium shadow-lg hover:shadow-xl hover:shadow-blue-500/30 transition-all disabled:opacity-70 disabled:cursor-not-allowed"
+                className="btn-primary flex items-center justify-center disabled:opacity-70 disabled:cursor-not-allowed w-full sm:w-auto"
               >
                 {loading ? (
                     <>

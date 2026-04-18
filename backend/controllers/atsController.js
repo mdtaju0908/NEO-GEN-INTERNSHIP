@@ -8,6 +8,7 @@ const fs = require('fs');
 const axios = require('axios');
 const { extractResumeText } = require('../utils/parseResume');
 const { calculateATSScore, generateSuggestions, extractResumeInfo } = require('../utils/atsScoring');
+const cloudinary = require('../config/cloudinary');
 
 // @desc    Upload resume and analyze with ATS
 // @route   POST /api/resume/upload
@@ -37,6 +38,26 @@ const uploadResume = asyncHandler(async (req, res) => {
 
         console.log('Parsed resume text length:', parsedText.length);
 
+        // Upload to Cloudinary manually
+        let uploadResult;
+        try {
+            uploadResult = await cloudinary.uploader.upload(req.file.path, {
+                resource_type: "auto",
+                folder: "resumes",
+            });
+        } catch (uploadError) {
+            console.error('Cloudinary upload error:', uploadError);
+            res.status(500);
+            throw new Error(`Cloudinary upload failed: ${uploadError.message}`);
+        }
+        
+        // Clean up the local file created by multer.diskStorage
+        if (fs.existsSync(req.file.path)) {
+            fs.unlinkSync(req.file.path);
+        }
+
+        const secureUrl = uploadResult.secure_url;
+
         // Calculate ATS score (ML-based with Rule-based fallback)
         let scoreData;
         let suggestions = [];
@@ -52,7 +73,7 @@ const uploadResume = asyncHandler(async (req, res) => {
             // Call ATS Django API using resumeUrl for server-side download
             const atsBase = process.env.ATS_API_URL || 'http://localhost:8000';
             const mlResponse = await axios.post(`${atsBase.replace(/\/+$/, '')}/ats/score`, {
-                resumeUrl: req.file.path,
+                resumeUrl: secureUrl,
                 jobDescription: jobDesc
             }, { timeout: 15000 });
 
@@ -115,7 +136,7 @@ const uploadResume = asyncHandler(async (req, res) => {
         const resume = await Resume.create({
             user: req.user.id,
             fileName: req.file.originalname,
-            fileUrl: req.file.path,
+            fileUrl: secureUrl,
             parsedText: parsedText,
             atsScore: scoreData.score,
             keywordsMatched: scoreData.matched.slice(0, 20), // Store top 20
@@ -178,12 +199,15 @@ const uploadResume = asyncHandler(async (req, res) => {
             extractedSkills: resumeInfo.skills.slice(0, 20),
             wordCount: scoreData.wordCount,
             fileName: req.file.originalname,
-            fileUrl: req.file.path // Return the file path/URL for frontend usage
+            fileUrl: secureUrl, // Return the file path/URL for frontend usage
+            secure_url: secureUrl // Explicitly return secure_url as requested
         };
 
         res.status(201).json(response);
     } catch (error) {
-        // For Cloudinary URLs, there is no local file to clean up
+        if (req.file && fs.existsSync(req.file.path)) {
+            fs.unlinkSync(req.file.path);
+        }
         throw error;
     }
 });
@@ -372,10 +396,12 @@ const deleteResume = asyncHandler(async (req, res) => {
         throw new Error('Not authorized to delete this resume');
     }
 
-    // Delete file from disk
-    const filePath = path.join(__dirname, '../uploads/', resume.fileName);
-    if (fs.existsSync(filePath)) {
-        fs.unlinkSync(filePath);
+    // Delete file from disk only if it's local (Cloudinary keeps files or handles separately)
+    if (!resume.fileUrl || !resume.fileUrl.startsWith('http')) {
+        const filePath = path.join(__dirname, '../uploads/', resume.fileName);
+        if (fs.existsSync(filePath)) {
+            fs.unlinkSync(filePath);
+        }
     }
 
     // Delete from database

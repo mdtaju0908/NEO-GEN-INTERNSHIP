@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { toast } from 'react-hot-toast';
 import Card from '../../ui/Card';
 import Modal from '../../ui/Modal';
 import Button from '../../ui/Button';
@@ -9,14 +10,6 @@ const Users = () => {
   const [users, setUsers] = useState([]);
   const [partners, setPartners] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [showAddPartner, setShowAddPartner] = useState(false);
-  const [newPartner, setNewPartner] = useState({
-    email: '',
-    organization: '',
-    contactName: '',
-    contactPhone: '',
-    password: ''
-  });
 
   const fetchUsers = async () => {
     try {
@@ -46,18 +39,30 @@ const Users = () => {
     loadData();
   }, []);
 
-  const handleBlockStudent = async (userId) => {
-    if (!window.confirm('Are you sure you want to block this student? They will not be able to login or apply.')) return;
+  const handleBlockStudent = async (userId, currentStatus) => {
+    if (!window.confirm(`Are you sure you want to ${currentStatus ? 'unblock' : 'block'} this student?`)) return;
 
     try {
-      const response = await api.put(`/users/${userId}/block`, { isBlocked: true });
-      const updatedUser = response.user || response;
-
-      setUsers(prev => prev.map(u => (u._id === userId ? { ...u, isBlocked: true, ...updatedUser } : u)));
-      alert('Student blocked successfully');
+      // My new backend uses toggle approach, or direct PUT
+      const response = await api.put(`/admin/users/${userId}/block`);
+      setUsers(prev => prev.map(u => (u._id === userId ? { ...u, isBlocked: !currentStatus } : u)));
+      toast.success(`Student ${currentStatus ? 'unblocked' : 'blocked'} successfully`);
     } catch (error) {
-      console.error('Failed to block student:', error);
-      alert('Failed to block student');
+      toast.error('Failed to change block status');
+    }
+  };
+
+  const handleImpersonateUser = async (userId) => {
+    if(!window.confirm('Are you sure you want to login as this user?')) return;
+    try {
+      const response = await api.post(`/admin/impersonate/${userId}`);
+      if(response.token) {
+         localStorage.setItem('token', response.token);
+         localStorage.setItem('user', JSON.stringify(response.user));
+         window.location.href = response.user.role === 'admin' ? '/admin/dashboard' : response.user.role === 'partner' ? '/partner/dashboard' : '/dashboard';
+      }
+    } catch(err) {
+       toast.error('Impersonation failed');
     }
   };
 
@@ -74,17 +79,15 @@ const Users = () => {
     }
   };
 
-  const handleCreatePartner = async (e) => {
-    e.preventDefault();
+  const handleChangeRole = async (userId, newRole) => {
+    if (!window.confirm(`Are you sure you want to upgrade this user to a ${newRole}?`)) return;
+
     try {
-      await api.post('/users/partner', newPartner);
-      alert('Partner created successfully');
-      setNewPartner({ email: '', organization: '', contactName: '', contactPhone: '', password: '' });
-      setShowAddPartner(false);
-      fetchPartners();
+      await api.put(`/admin/users/${userId}/role`, { role: newRole });
+      toast.success(`User upgraded to ${newRole} successfully`);
+      loadData(); // refresh to move user from Students tab to Partners tab
     } catch (error) {
-      console.error('Failed to create partner:', error);
-      alert('Failed to create partner: ' + (error.response?.data?.message || error.message));
+      toast.error('Failed to change user role');
     }
   };
 
@@ -114,11 +117,6 @@ const Users = () => {
             Partners
           </button>
         </div>
-        {activeTab === 'partners' && (
-          <Button onClick={() => setShowAddPartner(true)} className="ml-4">
-            Add Partner
-          </Button>
-        )}
       </div>
 
       <Card className="overflow-hidden">
@@ -173,15 +171,26 @@ const Users = () => {
                       {activeTab === 'students' && (
                         <>
                           <button 
-                            onClick={() => handleBlockStudent(user._id)}
+                            onClick={() => handleBlockStudent(user._id, user.isBlocked)}
                             className={`${user.isBlocked ? 'text-gray-500' : 'text-orange-600 hover:text-orange-900'}`}
-                            disabled={user.isBlocked}
                           >
-                            {user.isBlocked ? 'Blocked' : 'Block'}
+                            {user.isBlocked ? 'Unblock' : 'Block'}
+                          </button>
+                          <button 
+                            onClick={() => handleChangeRole(user._id, 'partner')}
+                            className="text-green-600 hover:text-green-900 ml-2"
+                          >
+                            Make Partner
+                          </button>
+                          <button 
+                            onClick={() => handleImpersonateUser(user._id)}
+                            className="text-indigo-600 hover:text-indigo-900 ml-2"
+                          >
+                            Impersonate
                           </button>
                           <button 
                             onClick={() => handleDeleteStudent(user._id)}
-                            className="text-red-600 hover:text-red-900"
+                            className="text-red-600 hover:text-red-900 ml-2"
                           >
                             Delete
                           </button>
@@ -198,71 +207,6 @@ const Users = () => {
           </table>
         </div>
       </Card>
-
-      <Modal
-        isOpen={showAddPartner}
-        onClose={() => setShowAddPartner(false)}
-        title="Create Partner Account"
-      >
-        <form onSubmit={handleCreatePartner} className="space-y-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Email</label>
-            <input
-              type="email"
-              value={newPartner.email}
-              onChange={(e) => setNewPartner(prev => ({ ...prev, email: e.target.value }))}
-              required
-              className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Organization</label>
-            <input
-              type="text"
-              value={newPartner.organization}
-              onChange={(e) => setNewPartner(prev => ({ ...prev, organization: e.target.value }))}
-              required
-              className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Contact Name</label>
-            <input
-              type="text"
-              value={newPartner.contactName}
-              onChange={(e) => setNewPartner(prev => ({ ...prev, contactName: e.target.value }))}
-              className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Contact Phone</label>
-            <input
-              type="text"
-              value={newPartner.contactPhone}
-              onChange={(e) => setNewPartner(prev => ({ ...prev, contactPhone: e.target.value }))}
-              className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Password (Optional)</label>
-            <input
-              type="password"
-              value={newPartner.password}
-              onChange={(e) => setNewPartner(prev => ({ ...prev, password: e.target.value }))}
-              className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-              placeholder="Leave blank for auto-generated"
-            />
-          </div>
-          <div className="flex justify-end space-x-3 pt-4">
-            <Button variant="outline" type="button" onClick={() => setShowAddPartner(false)}>
-              Cancel
-            </Button>
-            <Button type="submit">
-              Create Partner
-            </Button>
-          </div>
-        </form>
-      </Modal>
     </div>
   );
 };

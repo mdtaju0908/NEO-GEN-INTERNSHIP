@@ -3,9 +3,11 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { Menu, Bell, User, LogOut, Settings, ChevronDown, Search } from 'lucide-react';
 import { useAuth } from '../../../context/AuthContext';
 import { motion, AnimatePresence } from 'framer-motion';
+import NotificationDropdown from './NotificationDropdown';
 
 const DashboardNavbar = ({ onMenuClick, user }) => {
   const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
   const { logout } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
@@ -28,7 +30,7 @@ const DashboardNavbar = ({ onMenuClick, user }) => {
   }
 
   return (
-    <header className="bg-white border-b border-gray-200 sticky top-0 z-30 px-4 sm:px-6 lg:px-8 h-16">
+    <header className="glass-card rounded-none border-b border-navy/10 sticky top-0 z-30 px-4 sm:px-6 lg:px-8 h-16 rounded-b-[20px] shadow-sm mb-4">
         <div className="flex justify-between items-center h-full max-w-7xl mx-auto w-full">
           {/* Left Side */}
           <div className="flex items-center gap-4">
@@ -41,10 +43,10 @@ const DashboardNavbar = ({ onMenuClick, user }) => {
             </button>
             
             <div className="hidden md:flex flex-col">
-                <h1 className="text-xl font-bold text-gray-900">{getSectionTitle()}</h1>
+                <h1 className="text-xl font-bold text-navy">{getSectionTitle()}</h1>
             </div>
             
-            <span className="md:hidden font-bold text-lg text-gray-900">NeoGen</span>
+            <span className="md:hidden font-bold text-lg text-navy">NeoGen</span>
           </div>
 
           {/* Right Side */}
@@ -55,27 +57,37 @@ const DashboardNavbar = ({ onMenuClick, user }) => {
                 <input 
                     type="text" 
                     placeholder="Search..." 
-                    className="pl-10 pr-4 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500/20 focus:border-green-500 transition-all w-64"
+                    className="pl-10 pr-4 py-2 bg-white/50 border border-navy/10 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-saffron/20 focus:border-saffron transition-all w-64"
                 />
             </div>
 
-            <button className="p-2 text-gray-500 hover:text-green-600 rounded-lg hover:bg-green-50 transition-all relative">
-              <Bell size={20} />
-              <span className="absolute top-2 right-2 block h-2 w-2 rounded-full bg-red-500 ring-2 ring-white" />
-            </button>
+            <div className="relative">
+              <button 
+                className={`p-2 rounded-lg transition-all relative ${isNotificationsOpen ? 'text-saffron bg-saffron/10' : 'text-gray-500 hover:text-saffron hover:bg-saffron/10'}`}
+                onClick={() => setIsNotificationsOpen(!isNotificationsOpen)}
+              >
+                <Bell size={20} />
+                <span className="absolute top-2 right-2 block h-2 w-2 rounded-full bg-saffron ring-2 ring-white" />
+              </button>
+
+              <NotificationDropdown 
+                isOpen={isNotificationsOpen} 
+                onClose={() => setIsNotificationsOpen(false)} 
+              />
+            </div>
 
             <div className="relative">
               <button 
-                className="flex items-center gap-3 pl-1 pr-2 py-1 rounded-full hover:bg-gray-50 transition-colors border border-transparent hover:border-gray-200"
+                className="flex items-center gap-3 pl-1 pr-2 py-1 rounded-full hover:bg-white/50 transition-colors border border-transparent hover:border-navy/10"
                 onClick={() => setIsProfileOpen(!isProfileOpen)}
               >
                 <img 
-                  className="h-8 w-8 rounded-full object-cover ring-2 ring-gray-100" 
+                  className="h-8 w-8 rounded-full object-cover ring-2 ring-navy/5" 
                   src={user?.profilePicture || "https://ui-avatars.com/api/?name=" + (user?.name || 'User') + "&background=random"} 
                   alt={user?.name} 
                 />
                 <div className="hidden md:block text-left">
-                    <p className="text-sm font-semibold text-gray-700 leading-none">{user?.name?.split(' ')[0]}</p>
+                    <p className="text-sm font-semibold text-navy leading-none">{user?.name?.split(' ')[0]}</p>
                 </div>
                 <ChevronDown size={16} className="text-gray-400 hidden md:block" />
               </button>
@@ -92,22 +104,25 @@ const DashboardNavbar = ({ onMenuClick, user }) => {
                         animate={{ opacity: 1, y: 0, scale: 1 }}
                         exit={{ opacity: 0, y: 10, scale: 0.95 }}
                         transition={{ duration: 0.15 }}
-                        className="absolute right-0 z-20 mt-2 w-56 origin-top-right rounded-xl bg-white py-2 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none border border-gray-100"
+                        className="absolute right-0 z-20 mt-3 w-56 origin-top-right glass-card py-2 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
+                        role="menu"
+                        aria-orientation="vertical"
+                        aria-labelledby="user-menu-button"
                     >
-                        <div className="px-4 py-3 border-b border-gray-50">
-                            <p className="text-sm font-semibold text-gray-900">{user?.name}</p>
+                        <div className="px-4 py-3 border-b border-navy/5">
+                            <p className="text-sm font-semibold text-navy">{user?.name}</p>
                             <p className="text-xs text-gray-500 truncate">{user?.email}</p>
                         </div>
                         <div className="py-1">
                             <Link 
-                                to="/dashboard/profile"
+                                to={user?.role === 'admin' ? '/admin/dashboard/profile' : user?.role === 'partner' ? '/partner/dashboard/profile' : '/dashboard/profile'}
                                 onClick={() => setIsProfileOpen(false)}
                                 className="flex w-full items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-green-600 transition-colors"
                             >
                                 <User size={16} className="mr-3" /> Profile
                             </Link>
                             <Link 
-                                to="/dashboard/settings"
+                                to={user?.role === 'admin' ? '/admin/dashboard/settings' : user?.role === 'partner' ? '/partner/dashboard/settings' : '/dashboard/settings'}
                                 onClick={() => setIsProfileOpen(false)}
                                 className="flex w-full items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-green-600 transition-colors"
                             >

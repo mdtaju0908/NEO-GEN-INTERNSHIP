@@ -23,17 +23,13 @@ const Sidebar = ({ isOpen, onClose, role = 'student' }) => {
   };
 
   const SidebarContent = () => (
-    <div className="flex flex-col h-full bg-white border-r border-gray-200 shadow-sm">
-      <div className="flex items-center justify-between h-16 px-6 border-b border-gray-100">
-        <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-lg bg-green-600 flex items-center justify-center text-white font-bold shadow-md shadow-green-200">
-              NG
-            </div>
-            <div className="flex flex-col">
-                <span className="font-bold text-lg tracking-tight text-gray-900">
-                    NeoGen
-                </span>
-            </div>
+    <div className="flex flex-col h-full glass-card rounded-none rounded-r-[24px] border-r border-navy/10 shadow-lg">
+      <div className="h-20 flex items-center px-8 border-b border-navy/5">
+        <div className="flex items-center gap-3 w-full">
+          <div className="w-10 h-10 bg-gradient-to-br from-saffron to-[#ffad5c] rounded-xl flex items-center justify-center text-white font-bold text-xl shadow-md rotate-3">
+            N
+          </div>
+          <span className="text-2xl font-black text-navy tracking-tight">Neo<span className="text-saffron">Gen</span></span>
         </div>
         <button 
           onClick={onClose}
@@ -54,30 +50,20 @@ const Sidebar = ({ isOpen, onClose, role = 'student' }) => {
               to={item.path}
               end={item.end}
               onClick={onClose}
-              className={({ isActive }) => clsx(
-                "flex items-center w-full px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 group relative",
-                isActive 
-                  ? "bg-green-50 text-green-700" 
-                  : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
-              )}
+              className={({ isActive }) => `
+                group flex items-center px-4 py-3 text-sm font-medium rounded-xl transition-all duration-300
+                ${isActive 
+                  ? 'bg-gradient-to-r from-saffron/10 to-transparent text-navy border-l-4 border-saffron-hover shadow-sm font-bold' 
+                  : 'text-sub hover:bg-black/5 hover:text-navy'}
+              `}
             >
               {({ isActive }) => (
                 <>
-                  {isActive && (
-                    <motion.div
-                      layoutId="activeTab"
-                      className="absolute left-0 w-1 h-5 bg-green-600 rounded-r-full"
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      exit={{ opacity: 0 }}
-                    />
-                  )}
                   <Icon 
-                    size={18} 
-                    className={clsx(
-                      "mr-3 transition-colors duration-200", 
-                      isActive ? "text-green-600" : "text-gray-400 group-hover:text-gray-600"
-                    )} 
+                    className={`
+                      mr-3 flex-shrink-0 h-5 w-5 transition-transform duration-300 group-hover:scale-110
+                      ${isActive ? 'text-saffron-hover' : 'text-navy/50 group-hover:text-navy'}
+                    `} 
                   />
                   {item.label}
                 </>
@@ -113,7 +99,7 @@ const Sidebar = ({ isOpen, onClose, role = 'student' }) => {
       {/* Sidebar Container */}
       <div 
         className={clsx(
-          "fixed inset-y-0 left-0 z-50 w-64 bg-white border-r border-gray-200 shadow-sm transition-transform duration-300 transform md:relative md:translate-x-0 md:inset-auto md:shadow-none md:z-auto",
+          "fixed inset-y-0 left-0 z-50 w-[280px] glass-card rounded-none rounded-r-[24px] border-r border-navy/10 shadow-xl transition-transform duration-300 transform md:relative md:translate-x-0 md:inset-auto md:shadow-none md:z-auto",
           isOpen ? "translate-x-0" : "-translate-x-full"
         )}
       >

@@ -70,16 +70,16 @@ const Analytics = () => {
   const CustomTooltip = ({ active, payload, label }) => {
     if (active && payload && payload.length) {
       return (
-        <div className="bg-white p-3 border border-gray-100 shadow-lg rounded-xl">
-          <p className="font-semibold text-gray-900 mb-2">{label}</p>
+        <div className="glass-card p-3 shadow-xl">
+          <p className="font-semibold text-navy mb-2">{label}</p>
           {payload.map((entry, index) => (
             <div key={index} className="flex items-center gap-2 text-sm">
               <div 
-                className="w-2 h-2 rounded-full" 
+                className="w-2 h-2 rounded-full shadow-sm" 
                 style={{ backgroundColor: entry.color }}
               />
-              <span className="text-gray-600 capitalize">{entry.name}:</span>
-              <span className="font-bold text-gray-900">{entry.value}</span>
+              <span className="text-sub capitalize">{entry.name}:</span>
+              <span className="font-bold text-navy">{entry.value}</span>
             </div>
           ))}
         </div>
@@ -96,19 +96,19 @@ const Analytics = () => {
       variants={containerVariants}
     >
       <div>
-        <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
-            <Activity className="text-blue-600" />
+        <h1 className="text-2xl font-bold text-navy flex items-center gap-2">
+            <Activity className="text-saffron drop-shadow-sm" />
             Analytics & Insights
         </h1>
-        <p className="text-gray-500 mt-1">Visualize your progress and market trends.</p>
+        <p className="text-sub mt-1">Visualize your progress and market trends.</p>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         {/* Applications Over Time */}
-        <motion.div variants={itemVariants} className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 relative overflow-hidden group hover:shadow-md transition-shadow">
-          <div className="flex justify-between items-center mb-6">
-              <h3 className="text-lg font-bold text-gray-900 flex items-center gap-2">
-                  <TrendingUp className="text-blue-500" size={20} />
+        <motion.div variants={itemVariants} className="glass-card p-6 overflow-hidden group">
+          <div className="flex justify-between items-center mb-6 border-b border-navy/5 pb-4">
+              <h3 className="text-lg font-bold text-navy flex items-center gap-2">
+                  <TrendingUp className="text-saffron" size={20} />
                   Application Performance
               </h3>
           </div>
@@ -117,23 +117,23 @@ const Analytics = () => {
               <AreaChart data={applicationData}>
                 <defs>
                   <linearGradient id="colorApplied" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.2}/>
-                    <stop offset="95%" stopColor="#3b82f6" stopOpacity={0}/>
+                    <stop offset="5%" stopColor="#000080" stopOpacity={0.2}/>
+                    <stop offset="95%" stopColor="#000080" stopOpacity={0}/>
                   </linearGradient>
                   <linearGradient id="colorShortlisted" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#10b981" stopOpacity={0.2}/>
-                    <stop offset="95%" stopColor="#10b981" stopOpacity={0}/>
+                    <stop offset="5%" stopColor="#138808" stopOpacity={0.2}/>
+                    <stop offset="95%" stopColor="#138808" stopOpacity={0}/>
                   </linearGradient>
                 </defs>
-                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f3f4f6" />
-                <XAxis dataKey="month" axisLine={false} tickLine={false} tick={{fill: '#6b7280', fontSize: 12}} dy={10} />
-                <YAxis axisLine={false} tickLine={false} tick={{fill: '#6b7280', fontSize: 12}} />
+                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#000080" strokeOpacity={0.05} />
+                <XAxis dataKey="month" axisLine={false} tickLine={false} tick={{fill: '#000080', opacity: 0.7, fontSize: 12}} dy={10} />
+                <YAxis axisLine={false} tickLine={false} tick={{fill: '#000080', opacity: 0.7, fontSize: 12}} />
                 <Tooltip content={<CustomTooltip />} />
-                <Legend iconType="circle" wrapperStyle={{ paddingTop: '20px' }} />
+                <Legend iconType="circle" wrapperStyle={{ paddingTop: '20px', color: '#000080' }} />
                 <Area 
                     type="monotone" 
                     dataKey="applied" 
-                    stroke="#3b82f6" 
+                    stroke="#000080" 
                     strokeWidth={3} 
                     fillOpacity={1} 
                     fill="url(#colorApplied)" 
@@ -143,7 +143,7 @@ const Analytics = () => {
                 <Area 
                     type="monotone" 
                     dataKey="shortlisted" 
-                    stroke="#10b981" 
+                    stroke="#138808" 
                     strokeWidth={3} 
                     fillOpacity={1} 
                     fill="url(#colorShortlisted)" 
@@ -157,27 +157,27 @@ const Analytics = () => {
         </motion.div>
 
         {/* ATS Score Improvement */}
-        <motion.div variants={itemVariants} className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 relative overflow-hidden group hover:shadow-md transition-shadow">
-          <div className="flex justify-between items-center mb-6">
-              <h3 className="text-lg font-bold text-gray-900 flex items-center gap-2">
-                  <BarChart2 className="text-purple-500" size={20} />
+        <motion.div variants={itemVariants} className="glass-card p-6 overflow-hidden group">
+          <div className="flex justify-between items-center mb-6 border-b border-navy/5 pb-4">
+              <h3 className="text-lg font-bold text-navy flex items-center gap-2">
+                  <BarChart2 className="text-navy" size={20} />
                   ATS Score Improvement
               </h3>
           </div>
           <div className="h-80">
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={atsScoreData}>
-                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f3f4f6" />
-                <XAxis dataKey="version" axisLine={false} tickLine={false} tick={{fill: '#6b7280', fontSize: 12}} dy={10} />
-                <YAxis domain={[0, 100]} axisLine={false} tickLine={false} tick={{fill: '#6b7280', fontSize: 12}} />
+                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#000080" strokeOpacity={0.05} />
+                <XAxis dataKey="version" axisLine={false} tickLine={false} tick={{fill: '#000080', opacity: 0.7, fontSize: 12}} dy={10} />
+                <YAxis domain={[0, 100]} axisLine={false} tickLine={false} tick={{fill: '#000080', opacity: 0.7, fontSize: 12}} />
                 <Tooltip content={<CustomTooltip />} />
                 <Line 
                     type="monotone" 
                     dataKey="score" 
-                    stroke="#8b5cf6" 
+                    stroke="#FF9933" 
                     strokeWidth={4} 
-                    dot={{r: 6, fill: '#8b5cf6', strokeWidth: 3, stroke: '#fff'}} 
-                    activeDot={{r: 8}} 
+                    dot={{r: 6, fill: '#FF9933', strokeWidth: 3, stroke: '#fff'}} 
+                    activeDot={{r: 8, strokeWidth: 0, fill: '#138808'}} 
                     animationDuration={2000}
                 />
               </LineChart>
@@ -186,31 +186,31 @@ const Analytics = () => {
         </motion.div>
 
         {/* Skill Demand vs Your Profile */}
-        <motion.div variants={itemVariants} className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 lg:col-span-2 relative overflow-hidden group hover:shadow-md transition-shadow">
-          <div className="flex justify-between items-center mb-6">
-              <h3 className="text-lg font-bold text-gray-900 flex items-center gap-2">
-                  <PieChartIcon className="text-amber-500" size={20} />
+        <motion.div variants={itemVariants} className="glass-card p-6 lg:col-span-2 overflow-hidden group">
+          <div className="flex justify-between items-center mb-6 border-b border-navy/5 pb-4">
+              <h3 className="text-lg font-bold text-navy flex items-center gap-2">
+                  <PieChartIcon className="text-saffron-hover" size={20} />
                   Market Skill Demand vs Your Profile
               </h3>
           </div>
           <div className="h-80">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={skillDemandData} barSize={32} barGap={8}>
-                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f3f4f6" />
-                <XAxis dataKey="skill" axisLine={false} tickLine={false} tick={{fill: '#6b7280', fontSize: 12}} dy={10} />
-                <YAxis domain={[0, 100]} axisLine={false} tickLine={false} tick={{fill: '#6b7280', fontSize: 12}} />
-                <Tooltip cursor={{fill: '#f9fafb'}} content={<CustomTooltip />} />
-                <Legend iconType="circle" wrapperStyle={{ paddingTop: '20px' }} />
+                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#000080" strokeOpacity={0.05} />
+                <XAxis dataKey="skill" axisLine={false} tickLine={false} tick={{fill: '#000080', opacity: 0.7, fontSize: 12}} dy={10} />
+                <YAxis domain={[0, 100]} axisLine={false} tickLine={false} tick={{fill: '#000080', opacity: 0.7, fontSize: 12}} />
+                <Tooltip cursor={{fill: '#000080', opacity: 0.05}} content={<CustomTooltip />} />
+                <Legend iconType="circle" wrapperStyle={{ paddingTop: '20px', color: '#000080' }} />
                 <Bar 
                     dataKey="demand" 
-                    fill="#3b82f6" 
+                    fill="#000080" 
                     name="Market Demand" 
                     radius={[6, 6, 0, 0]} 
                     animationDuration={1500}
                 />
                 <Bar 
                     dataKey="yourLevel" 
-                    fill="#fbbf24" 
+                    fill="#FF9933" 
                     name="Your Proficiency" 
                     radius={[6, 6, 0, 0]} 
                     animationDuration={1500}

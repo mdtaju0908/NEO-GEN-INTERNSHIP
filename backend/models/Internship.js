@@ -53,9 +53,14 @@ const internshipSchema = mongoose.Schema(
     },
     status: {
       type: String,
-      enum: ['active', 'closed'],
-      default: 'active',
+      enum: ['draft', 'pending', 'active', 'published', 'closed', 'expired'],
+      default: 'pending',
     },
+    stats: {
+      views: { type: Number, default: 0 },
+      applied: { type: Number, default: 0 },
+      hired: { type: Number, default: 0 }
+    }
   },
   {
     timestamps: true,

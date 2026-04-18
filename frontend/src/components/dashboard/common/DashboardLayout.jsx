@@ -11,7 +11,7 @@ const DashboardLayout = ({ children, role }) => {
   const currentRole = role || user?.role || 'student';
 
   return (
-    <div className="min-h-screen bg-[#f8fafc] flex flex-col font-sans">
+    <div className="min-h-screen bg-theme-grid flex flex-col font-sans">
       <div className="flex flex-1 overflow-hidden">
         <Sidebar 
           isOpen={isSidebarOpen}
@@ -26,8 +26,7 @@ const DashboardLayout = ({ children, role }) => {
             />
             
             <main className="flex-1 overflow-y-auto p-6 relative scroll-smooth">
-                {/* Background decorative elements */}
-                <div className="fixed top-0 left-0 w-full h-96 bg-gradient-to-b from-blue-50/50 to-transparent pointer-events-none -z-10" />
+                {/* Grid is handled by bg-theme-grid */}
                 
                 <motion.div 
                     initial={{ opacity: 0, y: 20 }}

@@ -7,7 +7,8 @@ import {
     BarChart2, 
     Settings, 
     Users, 
-    PlusCircle 
+    PlusCircle,
+    Star
 } from 'lucide-react';
 
 export const roleConfig = {
@@ -19,6 +20,7 @@ export const roleConfig = {
             { path: '/dashboard/ats-resume', label: 'ATS Resume', icon: FileText },
             { path: '/dashboard/applications', label: 'Applications', icon: Briefcase },
             { path: '/dashboard/recommendations', label: 'Recommendations', icon: ThumbsUp },
+            { path: '/dashboard/success-stories', label: 'Success Stories', icon: Star },
             { path: '/dashboard/analytics', label: 'Analytics', icon: BarChart2 },
             { path: '/dashboard/settings', label: 'Settings', icon: Settings },
         ]
@@ -27,9 +29,11 @@ export const roleConfig = {
         basePath: '/admin/dashboard',
         menuItems: [
             { path: '/admin/dashboard', label: 'Overview', icon: LayoutDashboard, end: true },
+            { path: '/admin/dashboard/profile', label: 'Profile', icon: User },
             { path: '/admin/dashboard/users', label: 'Users', icon: Users },
             { path: '/admin/dashboard/internships', label: 'Internships', icon: Briefcase },
             { path: '/admin/dashboard/applications', label: 'Applications', icon: FileText },
+            { path: '/admin/dashboard/success-stories', label: 'Success Stories', icon: Star },
             { path: '/admin/dashboard/analytics', label: 'Analytics', icon: BarChart2 },
             { path: '/admin/dashboard/settings', label: 'Settings', icon: Settings },
         ]
@@ -38,6 +42,7 @@ export const roleConfig = {
         basePath: '/partner/dashboard',
         menuItems: [
             { path: '/partner/dashboard', label: 'Overview', icon: LayoutDashboard, end: true },
+            { path: '/partner/dashboard/profile', label: 'Profile', icon: User },
             { path: '/partner/dashboard/post-internship', label: 'Post Internship', icon: PlusCircle },
             { path: '/partner/dashboard/applications', label: 'Applications', icon: Briefcase },
             { path: '/partner/dashboard/analytics', label: 'Analytics', icon: BarChart2 },

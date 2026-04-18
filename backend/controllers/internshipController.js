@@ -106,9 +106,11 @@ const getInternshipById = asyncHandler(async (req, res) => {
 
 // @desc    Create new internship
 // @route   POST /api/internships
-// @access  Private/Admin
+// @access  Private
 const createInternship = asyncHandler(async (req, res) => {
     req.body.createdBy = req.user.id;
+    // Set to active so it immediately appears on the webpage
+    req.body.status = 'active';
     const internship = await Internship.create(req.body);
     res.status(201).json(internship);
 });
@@ -147,11 +149,38 @@ const deleteInternship = asyncHandler(async (req, res) => {
     res.status(200).json({ id: req.params.id });
 });
 
+// @desc    Get ALL internships for admin (including pending)
+// @route   GET /api/internships/admin/all
+// @access  Private/Admin
+const getAdminInternships = asyncHandler(async (req, res) => {
+    const internships = await Internship.find({}).sort({ createdAt: -1 }).lean();
+    res.status(200).json(internships);
+});
+
+// @desc    Approve internship
+// @route   PUT /api/internships/:id/approve
+// @access  Private/Admin
+const approveInternship = asyncHandler(async (req, res) => {
+    const internship = await Internship.findById(req.params.id);
+
+    if (!internship) {
+        res.status(404);
+        throw new Error('Internship not found');
+    }
+
+    internship.status = 'active';
+    await internship.save();
+
+    res.status(200).json({ message: 'Internship approved successfully', internship });
+});
+
 module.exports = {
     getInternships,
     getInternshipById,
     createInternship,
     updateInternship,
     deleteInternship,
-    getRecommendedInternships
+    getRecommendedInternships,
+    getAdminInternships,
+    approveInternship
 };

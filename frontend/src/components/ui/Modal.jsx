@@ -35,7 +35,7 @@ const Modal = ({ isOpen, onClose, title, children, className }) => {
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.95, opacity: 0 }}
               className={clsx(
-                "bg-white rounded-xl shadow-xl w-full max-w-lg pointer-events-auto flex flex-col max-h-[90vh]",
+                "glass-card w-full max-w-lg pointer-events-auto flex flex-col max-h-[90vh]",
                 className
               )}
             >

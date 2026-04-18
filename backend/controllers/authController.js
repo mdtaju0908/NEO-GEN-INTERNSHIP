@@ -377,6 +377,8 @@ const loginUser = asyncHandler(async (req, res) => {
     }
 
     const isMatch = await user.matchPassword(password);
+    console.log(`[Auth] Comparison for ${email}: match=${isMatch}, passwordLength=${password.length}`);
+    console.log(`[Auth] Hashed password in DB (start): ${user.password.substring(0, 10)}...`);
     if (!isMatch) {
         console.log(`[Auth] Password mismatch for: ${email}`);
         return res.status(401).json({
@@ -418,41 +420,42 @@ const loginUser = asyncHandler(async (req, res) => {
     });
 });
 
-// @desc    Authenticate admin (NO AUTH - ANY EMAIL ALLOWED)
+// @desc    Authenticate admin
 // @route   POST /api/admin/login
 // @access  Public
 const loginAdmin = asyncHandler(async (req, res) => {
     const { email, password } = req.body;
-    const normalizedEmail = email.toLowerCase().trim();
 
-    console.log(`[Auth] Admin Login Attempt (NO AUTH): ${normalizedEmail}`);
-
-    // Find or create admin user - NO PASSWORD CHECK
-    let user = await User.findOne({ email: normalizedEmail });
-
-    // If user doesn't exist, create admin account automatically
-    if (!user) {
-        console.log(`[Auth] Creating new admin user: ${normalizedEmail}`);
-        user = await User.create({
-            name: email.split('@')[0] || 'Admin User',
-            email: normalizedEmail,
-            password: password || 'temppass123',
-            role: 'admin'
-        });
+    if (!email || !password) {
+        res.status(400);
+        throw new Error('Please provide email and password');
     }
 
-    // Force role to admin if not already
-    if (user.role !== 'admin') {
-        user.role = 'admin';
-        await user.save();
-        console.log(`[Auth] Elevated ${normalizedEmail} to admin role`);
+    const normalizedEmail = email.toLowerCase().trim();
+    console.log(`[Auth] Admin/Partner Login Attempt: ${normalizedEmail}`);
+
+    const user = await User.findOne({ email: normalizedEmail }).select('+password');
+
+    if (!user || !(await user.matchPassword(password))) {
+        res.status(401);
+        throw new Error('Invalid email or password');
+    }
+
+    if (user.role !== 'admin' && user.role !== 'partner') {
+        res.status(403);
+        throw new Error('Access denied. You are not an admin or partner.');
+    }
+
+    if (user.isBlocked) {
+        res.status(403);
+        throw new Error('Your account has been blocked. Please contact support.');
     }
 
     // Log Activity
     try {
         await ActivityLog.create({
             user: user._id,
-            action: 'Admin Logged In',
+            action: `${user.role === 'admin' ? 'Super Admin' : 'Partner'} Logged In`,
             details: { email: user.email },
             ip: req.ip,
             userAgent: req.get('User-Agent')
@@ -462,17 +465,16 @@ const loginAdmin = asyncHandler(async (req, res) => {
     }
 
     const token = generateToken(user._id);
-    console.log(`[Auth] Admin ${normalizedEmail} logged in successfully (NO AUTH)`);
+    console.log(`[Auth] ${user.role} ${normalizedEmail} logged in successfully`);
 
-    // Return response with success flag and all required fields
     res.status(200).json({
         success: true,
         token,
         _id: user.id,
         name: user.name,
         email: user.email,
-        role: 'admin',
-        message: 'Admin login successful'
+        role: user.role,
+        message: 'Login successful'
     });
 });
 

@@ -33,6 +33,22 @@ const userSchema = mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    isVerified: {
+      type: Boolean,
+      default: false,
+    },
+    partnerStatus: {
+      type: String,
+      enum: ['pending', 'approved', 'rejected'],
+      default: 'pending',
+    },
+    lastLogin: {
+      type: Date,
+    },
+    impersonationActive: {
+      type: Boolean,
+      default: false,
+    },
     partnerInfo: {
       organization: { type: String },
       contactName: { type: String },
