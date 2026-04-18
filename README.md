@@ -21,7 +21,7 @@ NEO GEN/
 ├── package.json                  # Root workspace config
 ├── package-lock.json            # Dependencies lock
 ├── FILE_STRUCTURE.md            # This file
-└── FILE_STRUCTURE.pdf           # PDF version
+└── FILE_STRUCTURE.pdf           # PDF version1
 ```
 
 ---
