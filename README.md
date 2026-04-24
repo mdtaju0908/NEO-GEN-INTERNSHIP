@@ -8,6 +8,9 @@ NEO GEN is a full-stack internship management and ATS (Applicant Tracking System
 - **ML Service**: Python/Django + scikit-learn
 
 ---
+# Screenshot
+
+<img width="1812" height="910" alt="image" src="https://github.com/user-attachments/assets/f59b1cce-804a-4cf9-a0d0-4e4172c8bcf7" />
 
 ## Root Directory Structure
 
